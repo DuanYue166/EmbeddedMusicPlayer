@@ -81,3 +81,5 @@ int main(void){
 		play(notes[musicID],times[musicID]);
 	}
 }
+
+//test syc
