@@ -12,4 +12,3 @@
 .\objects\main.o: cmsis_armcc.h
 .\objects\main.o: mpu_armv7.h
 .\objects\main.o: system_stm32f4xx.h
-.\objects\main.o: usart.h

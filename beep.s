@@ -42,18 +42,20 @@ beepInit
 	LDR R0, =GPIOF_BSRR
 	MOV R1, #0
 	STR R1,	[R0]
+
 	;初始化完成
+	BX 	LR
 
 beepOn
 	LDR R0,	=GPIOF_ODR
 	LDR R1, =0X100
 	STR R1,	[R0]
-	BX 	lr
-	ENDP
+	BX 	LR
 
 beepOff
 	LDR R0,	=GPIOF_ODR
 	LDR R1, =0	;TODO
 	STR R1,	[R0]
-	BX 	lr
-	ENDP
+	BX 	LR
+
+	END
