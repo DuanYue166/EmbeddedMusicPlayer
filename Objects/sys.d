@@ -1,0 +1,11 @@
+.\objects\sys.o: sys.c
+.\objects\sys.o: sys.h
+.\objects\sys.o: stm32f4xx.h
+.\objects\sys.o: stm32f407xx.h
+.\objects\sys.o: core_cm4.h
+.\objects\sys.o: C:\Program1\Keli\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\sys.o: cmsis_version.h
+.\objects\sys.o: cmsis_compiler.h
+.\objects\sys.o: cmsis_armcc.h
+.\objects\sys.o: mpu_armv7.h
+.\objects\sys.o: system_stm32f4xx.h

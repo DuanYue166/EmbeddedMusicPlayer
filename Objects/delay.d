@@ -1,0 +1,12 @@
+.\objects\delay.o: delay.c
+.\objects\delay.o: sys.h
+.\objects\delay.o: stm32f4xx.h
+.\objects\delay.o: stm32f407xx.h
+.\objects\delay.o: core_cm4.h
+.\objects\delay.o: C:\Program1\Keli\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\delay.o: cmsis_version.h
+.\objects\delay.o: cmsis_compiler.h
+.\objects\delay.o: cmsis_armcc.h
+.\objects\delay.o: mpu_armv7.h
+.\objects\delay.o: system_stm32f4xx.h
+.\objects\delay.o: delay.h

@@ -1,0 +1,13 @@
+.\objects\usart.o: usart.c
+.\objects\usart.o: sys.h
+.\objects\usart.o: stm32f4xx.h
+.\objects\usart.o: stm32f407xx.h
+.\objects\usart.o: core_cm4.h
+.\objects\usart.o: C:\Program1\Keli\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\usart.o: cmsis_version.h
+.\objects\usart.o: cmsis_compiler.h
+.\objects\usart.o: cmsis_armcc.h
+.\objects\usart.o: mpu_armv7.h
+.\objects\usart.o: system_stm32f4xx.h
+.\objects\usart.o: usart.h
+.\objects\usart.o: C:\Program1\Keli\ARM\ARMCC\Bin\..\include\stdio.h

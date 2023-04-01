@@ -1,0 +1,16 @@
+control_change channel=3 control=7 value=100 time=0
+program_change channel=3 program=71 time=0
+note_on channel=3 note=66 velocity=100 time=7740
+note_on channel=3 note=66 velocity=0 time=29
+note_on channel=3 note=66 velocity=100 time=1
+note_on channel=3 note=66 velocity=0 time=29
+note_on channel=3 note=66 velocity=100 time=1
+note_on channel=3 note=66 velocity=0 time=59
+note_on channel=3 note=64 velocity=100 time=1
+note_on channel=3 note=64 velocity=0 time=29
+note_on channel=3 note=62 velocity=100 time=1
+note_on channel=3 note=62 velocity=0 time=29
+note_on channel=3 note=62 velocity=100 time=1
+note_on channel=3 note=62 velocity=0 time=59
+note_on channel=3 note=66 velocity=100 time=1
+note_on channel=3 note=66 velocity=0 time=119
