@@ -8,11 +8,20 @@ GPIOF_OTYPER 	EQU 	(GPIOF+0x04)
 GPIOF_OSPEEDR 	EQU 	(GPIOF+0x08)
 GPIOF_ODR 		EQU 	(GPIOF+0x14)
 	
-	
+GPIOE 			EQU 	0x40021000
+GPIOE_BSRR 		EQU 	(GPIOE+0x18)
+GPIOE_MODER 	EQU 	(GPIOE+0x00)
+GPIOE_PUPDER 	EQU 	(GPIOE+0x0C)
+GPIOE_OSPEEDR 	EQU 	(GPIOE+0x08)
+GPIOE_IDR 		EQU 	(GPIOE+0x10)	
+
 	AREA LAB, CODE, READONLY
 	EXPORT beepInit
 	EXPORT beepOn
 	EXPORT beepOff
+	EXPORT buttonInit
+	EXPORT buttonDetect
+	IMPORT delay_ms
 	ENTRY
 	
 	
@@ -20,7 +29,7 @@ beepInit
 	;外设时钟使能
 	LDR	R0,	=RCC_AHB1ENR
 	LDR R1, [R0]
-	ORR R1,	#0x24
+	ORR R1,	#0x30	;0011 0000
 	STR R1,	[R0]
 	
 	;设置通用模式
@@ -46,6 +55,32 @@ beepInit
 	;初始化完成
 	BX 	LR
 
+buttonInit
+	;外设时钟使能已在beepInit中完成
+	
+	;设置通用模式
+	LDR	R0, =GPIOE_MODER
+	MOV	R1,	#0
+	STR R1,	[R0]
+
+	;设置上拉
+	LDR R0,	=GPIOE_PUPDER
+	LDR R1,	=0xFFFFFC7F	;1111 1101 0111 1111
+	STR R1, [R0]
+
+	;设置中速
+	LDR R0,	=GPIOE_OSPEEDR
+	LDR R1, =0x110000
+	STR R1,	[R0]
+
+	;复位
+	LDR R0, =GPIOE_BSRR
+	MOV R1, #0
+	STR R1,	[R0]
+
+	;初始化完成
+	BX 	LR
+
 beepOn
 	LDR R0,	=GPIOF_ODR
 	LDR R1, =0X100
@@ -54,8 +89,31 @@ beepOn
 
 beepOff
 	LDR R0,	=GPIOF_ODR
-	LDR R1, =0	;TODO
+	LDR R1, =0
 	STR R1,	[R0]
 	BX 	LR
+
+buttonDetect
+	LDR R1, =GPIOE_IDR
+	LDR R2, =0X8
+	ORR R2, R1
+	CMP R2, #0
+	BNE LOOP_1
+
+	LDR R2, =0X10
+	ORR R2, R1
+	CMP R2, #0
+	BNE LOOP_2
+
+	B LOOP_3
+LOOP_1
+	MOV R0, #1
+	BX LR
+LOOP_2
+	MOV R0, #2
+	BX LR
+LOOP_3
+	MOV R0, #0
+	BX LR
 
 	END

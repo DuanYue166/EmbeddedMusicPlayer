@@ -17,12 +17,15 @@ const int ct[128]={57736,54466,51440,48543,45829,43252,40816,38520,36363,34317,3
 extern void beepOn(void);
 extern void beepOff(void);
 extern void beepInit(void);
+extern void buttonInit(void);
+extern int buttonDetect(int*);
 
 /*各个函数初始化*/
 void init(){
 	sys_stm32_clock_init(336, 8, 2, 7);
   	delay_init(168);
 	beepInit();
+	buttonInit();
 }
 
 /*播放音符持续一段时间
@@ -43,8 +46,9 @@ void playNote(int note,int timeUs){
   time: 持续时间数组
 */
 void play(int *note,double *time){
-	for(int i=0;i<note[0];++i)
+	for(int i=0;i<note[0];++i){
 		playNote(note[i],time[i]);
+	}
 }
 
 /*从文件加载曲目
@@ -71,13 +75,32 @@ void load(){
 	}
 }
 
+/*根据按钮情况切换曲目
+  button：按钮按下情况
+  musicID：当前曲目ID
+  musicNum：曲库曲目数
+*/
+int musicIDShifter(int button,int musicID,int musicNum){
+	int latestMusicID = musicID;
+	if(button == 1){
+		latestMusicID = ((latestMusicID - 1) == 0 ? musicNum : latestMusicID - 1);
+	}else if(button == 2){
+		latestMusicID  = (latestMusicID + 1) % musicNum;
+	}
+	return latestMusicID;
+}
+
 int main(void){
 	init();
 	int musicID=1;
+	int button = 0;
+	int* pbutton = &button;
 	while(1){
 		/*TODO
 			检测按钮按下，切换乐曲
 		*/
+		buttonDetect(pbutton); //possible to be error
+		musicID = musicIDShifter(button,musicID,musicNum);
 		play(notes[musicID],times[musicID]);
 	}
 }
