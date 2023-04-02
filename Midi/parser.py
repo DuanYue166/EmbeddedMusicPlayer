@@ -1,95 +1,62 @@
 import time
 import mido
-
 from mido import MidiFile
 
-def extract(mid:MidiFile,trackID:int,outFileName:str):
-    file=open(outFileName,'w')
-    tempo=500000
-    for msg in mid.tracks[trackID]:
-        if(not msg.is_meta):
-            sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,tempo)
 
-            print(msg)
-        elif(msg.type=='set_tempo'):
-            tempo=msg.tempo
-            print('tempo set'+str(tempo))
+def extractTrack(mid:MidiFile,trackID:int):
+    noteList=[]
+    tempo=500000
+    lstMsg=0
+    for i,track in enumerate(mid.tracks):
+        for msg in track:
+            if(msg.type=='set_tempo'):
+                tempo=msg.tempo
+                print('tempo set '+str(tempo))
+            elif(i==trackID and (not msg.is_meta)):
+                sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,350959)
+                if((lstMsg is not 0) and lstMsg.type=='note_on' and lstMsg.velocity!=0):
+                    noteList.append([lstMsg.note,sleepTime])
+                    print(lstMsg)
+                lstMsg=msg    
+    return noteList
+
 
 def playTrack(mid:MidiFile,trackID:int):
     outport = mido.open_output()
     tempo=500000
-    for msg in mid.tracks[trackID]:
-        if(not msg.is_meta):
-            sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,tempo)
-            if(sleepTime<10):
-                time.sleep(mido.tick2second(msg.time,mid.ticks_per_beat,tempo))
-            outport.send(msg)
-            print(msg)
-        elif(msg.type=='set_tempo'):
-            tempo=msg.tempo
-            print('tempo set'+str(tempo))
+    for i,track in enumerate(mid.tracks):
+        for msg in track:
+            if(msg.type=='set_tempo'):
+                tempo=msg.tempo
+                print('tempo set '+str(tempo))
+            elif(i==trackID and (not msg.is_meta)):
+                sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,350959)
+                if(sleepTime<3):
+                    time.sleep(sleepTime)
+                outport.send(msg)
+                print(msg)
+
 
 def saveSheetToFile(noteList:list,outFileName:str):
-    
-    pass
+    file=open(outFileName,'w')
+    file.write(str(len(noteList))+'\n')
+    for note,time in noteList:
+        file.write("{} {}\n".format(note,time))
+    file.close()
 
-def outputToFile():
-    file=open('output2.txt','w')
-    tempo=500000
+
+def readMidi(mid):
+    filename='./temp/{}.log'.format(time.strftime(r'%Y%m%d_%H%M%S',time.localtime()))
+    file=open(filename,'w')
     for i, track in enumerate(mid.tracks):
-        print('Track {}: {}'.format(i, track.name))
+        file.write('Track {}: {}\n'.format(i, track.name))
         for msg in track:
-            if(not msg.is_meta):
-                if(msg.channel==3):
-                    print(msg)
-                    file.write(str(msg)+'\n')
-                    sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,tempo)
-                    print(sleepTime)
-                    if(sleepTime<10):
-                        time.sleep(mido.tick2second(msg.time,mid.ticks_per_beat,tempo))
-            elif(msg.type=='set_tempo'):
-                tempo=msg.tempo
-                print('tempo set'+str(tempo))
+            file.write(str(msg)+'\n')
 
 
-def getList():
-    noteList=[]
-    tempo=500000
-    lstMsg=0
-    for i, track in enumerate(mid.tracks):
-        print('Track {}: {}'.format(i, track.name))
-        for msg in track:
-            if(not msg.is_meta):
-                if(msg.channel==3):
-                    sleepTime=mido.tick2second(msg.time,mid.ticks_per_beat,tempo)
-                    print(lstMsg)
-                    if((lstMsg is not 0) and  lstMsg.type=='note_on' and lstMsg.velocity != 0):
-                        noteList.append([lstMsg.note,sleepTime])
-                    lstMsg=msg.copy()
-            elif(msg.type=='set_tempo'):
-                tempo=msg.tempo
-                print('tempo set'+str(tempo))
-    print(noteList)
-    return noteList
-
-
-mid = mido.MidiFile('D:/Dev/STM32/Final/Midi/HotelCalifornia.mid')
-
-
-
-outputToFile()
-exit()
-
-
-noteList=getList()
-
-file=open('loads.txt','w')
-file.write('a['+str(len(noteList))+']={')
-for note in noteList:
-    file.write(str(note[0])+',')
-file.write('};\n')
-file.write('b['+str(len(noteList))+']={')
-for note in noteList:
-    file.write(str(note[1])+',')
-file.write('};\n')
-
+if(__name__=='__main__'):
+    mid = mido.MidiFile('./res/Everglow.mid')
+    # readMidi(mid)
+    # playTrack(mid,6)
+    noteList=extractTrack(mid,6)
+    saveSheetToFile(noteList,r'./res/4.txt')

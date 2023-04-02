@@ -78,6 +78,9 @@ int main(void){
 		/*TODO
 			检测按钮按下，切换乐曲
 		*/
+		if(BtDown[0/1])
+			musicID=(musicID)%musicNum+1;
+		if()
 		play(notes[musicID],times[musicID]);
 	}
 }
