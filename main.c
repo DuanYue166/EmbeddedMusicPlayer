@@ -99,8 +99,14 @@ int main(void){
 		/*TODO
 			检测按钮按下，切换乐曲
 		*/
+<<<<<<< HEAD
 		buttonDetect(pbutton); //possible to be error
 		musicID = musicIDShifter(button,musicID,musicNum);
+=======
+		if(BtDown[0/1])
+			musicID=(musicID)%musicNum+1;
+		if()
+>>>>>>> f5484ddc4a2167b399f32e5a57aa413ee07625d2
 		play(notes[musicID],times[musicID]);
 	}
 }
